@@ -122,7 +122,6 @@ public class Server {
                         }
 
                     } else {
-                        // fallback (shouldn't happen)
                         System.out.println("Unknown message type");
                     }
                 }
