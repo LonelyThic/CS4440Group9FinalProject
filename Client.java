@@ -66,6 +66,9 @@ public class Client {
 
                     String message = scanner.nextLine();
 
+                    String encrypted = EncryptionUtil.encrypt(message);
+                    output.println("TEXT:" + encrypted);
+
                     // Send user message to server
                     output.println(message);
 
