@@ -83,19 +83,48 @@ public class Server {
                  */
                 while ((message = input.readLine()) != null) {
 
-                    System.out.println("Message received: " + message);
+                    if (message.startsWith("TEXT:")) {
 
-                    /*
-                     * Store received message into mailbox
-                     * Mailbox is shared across all threads
-                     */
-                    mailbox.add(message);
+                        String encrypted = message.substring(5);
 
-                    /*
-                     * Send confirmation back to client
-                     */
-                    output.println("Message stored. Mailbox size: "
-                            + mailbox.size());
+                        // Decrypt message
+                        String decrypted = EncryptionUtil.decrypt(encrypted);
+
+                        System.out.println("Decrypted: " + decrypted);
+
+                        mailbox.add(decrypted);
+
+                        output.println("Message stored securely.");
+
+                    } else if (message.startsWith("IMG:")) {
+
+                        try {
+                            String encrypted = message.substring(4);
+
+                            String decoded = EncryptionUtil.decrypt(encrypted);
+
+                            byte[] imageBytes = Base64.getDecoder().decode(decoded);
+
+                            String fileName = "received_" + System.currentTimeMillis() + ".jpg";
+
+                            FileOutputStream fos = new FileOutputStream(fileName);
+                            fos.write(imageBytes);
+                            fos.close();
+
+                            mailbox.add("[IMAGE RECEIVED: " + fileName + "]");
+
+                            System.out.println("Image saved as: " + fileName);
+
+                            output.println("Image received and stored.");
+
+                        } catch (Exception e) {
+                            output.println("Error receiving image.");
+                        }
+
+                    } else {
+                        // fallback (shouldn't happen)
+                        System.out.println("Unknown message type");
+                    }
                 }
 
             } catch (IOException e) {
