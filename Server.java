@@ -88,9 +88,9 @@ public class Server {
                         String encrypted = message.substring(5);
 
                         // Decrypt message
+                        System.out.println("Encrypted received: " + encrypted);
                         String decrypted = EncryptionUtil.decrypt(encrypted);
-
-                        System.out.println("Decrypted: " + decrypted);
+                        System.out.println("Decrypted message: " + decrypted);
 
                         mailbox.add(decrypted);
 
