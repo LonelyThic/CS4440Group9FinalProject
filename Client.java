@@ -83,10 +83,10 @@ public class Client {
                             System.out.println("Image sent.");
 
                         } else {
-                            // TEXT MESSAGE
+                            // text mssage
                             String encrypted = EncryptionUtil.encrypt(message);
 
-                            // SHOW encryption happening
+                            // shows encryption happening
                             System.out.println("Original: " + message);
                             System.out.println("Encrypted: " + encrypted);
 
