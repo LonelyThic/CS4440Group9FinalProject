@@ -62,18 +62,36 @@ public class Client {
              */
             Thread sendThread = new Thread(() -> {
 
-                while (true) {
+            while (true) {
 
-                    String message = scanner.nextLine();
+                String message = scanner.nextLine();
 
-                    String encrypted = EncryptionUtil.encrypt(message);
-                    output.println("TEXT:" + encrypted);
+                try {
+                    if (message.startsWith("img ")) {
 
-                    // Send user message to server
-                    output.println(message);
+                            String path = message.substring(4);
 
+                            byte[] imageBytes = java.nio.file.Files.readAllBytes(
+                                    java.nio.file.Paths.get(path));
+
+                            String base64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
+
+                            String encrypted = EncryptionUtil.encrypt(base64);
+
+                            output.println("IMG:" + encrypted);
+
+                            System.out.println("Image sent.");
+
+                        } else {
+                            // TEXT MESSAGE
+                            String encrypted = EncryptionUtil.encrypt(message);
+                            output.println("TEXT:" + encrypted);
+                        }
+
+                    } catch (Exception e) {
+                        System.out.println("Error sending image.");
+                    }
                 }
-
             });
 
             /*
