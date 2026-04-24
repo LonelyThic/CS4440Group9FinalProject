@@ -85,6 +85,11 @@ public class Client {
                         } else {
                             // TEXT MESSAGE
                             String encrypted = EncryptionUtil.encrypt(message);
+
+                            // SHOW encryption happening
+                            System.out.println("Original: " + message);
+                            System.out.println("Encrypted: " + encrypted);
+
                             output.println("TEXT:" + encrypted);
                         }
 
