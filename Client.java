@@ -1,10 +1,10 @@
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class Client {
 
-    // Server address and port  
+    // Server address and port
     private static final String SERVER_IP = "127.0.0.1";
     private static final int PORT = 5000;
 
@@ -62,25 +62,32 @@ public class Client {
              */
             Thread sendThread = new Thread(() -> {
 
-            while (true) {
+                while (true) {
 
-                String message = scanner.nextLine();
+                    //System.out.print("Enter the file address or message: ");
+                    String message = scanner.nextLine();
 
-                try {
-                    if (message.startsWith("img ")) {
+                    try {
+                        if (message.endsWith(".jpg") || message.endsWith(".jpeg") || message.endsWith(".png") || message.endsWith(".gif") || message.endsWith(".bmp")) {
 
-                            String path = message.substring(4);
+                            File file = new File(message);
+                            if (!file.exists()) {
+                                System.out.println("No File Was Found.");
+                            } else {
+                                try {
+                                    byte[] imageBytes = java.nio.file.Files.readAllBytes(file.toPath());
 
-                            byte[] imageBytes = java.nio.file.Files.readAllBytes(
-                                    java.nio.file.Paths.get(path));
+                                    String base64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
 
-                            String base64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
+                                    String encrypted = EncryptionUtil.encrypt(base64);
 
-                            String encrypted = EncryptionUtil.encrypt(base64);
+                                    output.println("IMG:" + encrypted);
 
-                            output.println("IMG:" + encrypted);
-
-                            System.out.println("Image sent.");
+                                    System.out.println("Image Sent.");
+                                } catch (Exception e) {
+                                    System.out.println("Image Failed To Send.");
+                                }
+                            }
 
                         } else {
                             // text mssage
