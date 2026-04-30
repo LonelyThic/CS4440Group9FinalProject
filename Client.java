@@ -68,21 +68,28 @@ public class Client {
                     String message = scanner.nextLine();
 
                     try {
+
+                        //Do the image things if it ends with any of these endings.
                         if (message.endsWith(".jpg") || message.endsWith(".jpeg") || message.endsWith(".png") || message.endsWith(".gif") || message.endsWith(".bmp")) {
 
+                            //Put the image in file
                             File file = new File(message);
+
+                            //Checks if the image exists
                             if (!file.exists()) {
                                 System.out.println("No File Was Found.");
                             } else {
                                 try {
+
+                                    //Encrypt the image
                                     byte[] imageBytes = java.nio.file.Files.readAllBytes(file.toPath());
-
                                     String base64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
-
                                     String encrypted = EncryptionUtil.encrypt(base64);
 
+                                    //Shows user the encrypted image
                                     output.println("IMG:" + encrypted);
 
+                                    //Notify the user the image is sent
                                     System.out.println("Image Sent.");
                                 } catch (Exception e) {
                                     System.out.println("Image Failed To Send.");
