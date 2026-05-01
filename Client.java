@@ -60,7 +60,7 @@ public class Client {
             Thread sendThread = new Thread(() -> {
 
                 while (true) {
-
+                    System.out.print("Enter message or image path: ");
                     String message = scanner.nextLine();
 
                     try {
