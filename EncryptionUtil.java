@@ -21,8 +21,8 @@ public class EncryptionUtil {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     public static String decrypt(String encryptedMessage) {
@@ -38,7 +38,41 @@ public class EncryptionUtil {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
+    }
+
+    /*
+     * Encrypt raw image bytes by first converting them to Base64 text,
+     * then encrypting that text.
+     */
+    public static String encryptImage(byte[] imageBytes) {
+        try {
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+            return encrypt(base64Image);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /*
+     * Decrypt encrypted image text back into raw image bytes.
+     */
+    public static byte[] decryptImage(String encryptedImage) {
+        try {
+            String base64Image = decrypt(encryptedImage);
+
+            if (base64Image == null) {
+                return null;
+            }
+
+            return Base64.getDecoder().decode(base64Image);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

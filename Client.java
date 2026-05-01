@@ -22,7 +22,8 @@ public class Client {
             /*
              * Stream for receiving server messages
              */
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream()));
 
             /*
              * Stream for sending messages to server
@@ -42,15 +43,11 @@ public class Client {
                     String response;
 
                     while ((response = input.readLine()) != null) {
-
                         System.out.println("Server: " + response);
-
                     }
 
                 } catch (IOException e) {
-
                     System.out.println("Server connection closed.");
-
                 }
 
             });
@@ -64,51 +61,48 @@ public class Client {
 
                 while (true) {
 
-                    //System.out.print("Enter the file address or message: ");
                     String message = scanner.nextLine();
 
                     try {
 
-                        //Do the image things if it ends with any of these endings.
-                        if (message.endsWith(".jpg") || message.endsWith(".jpeg") || message.endsWith(".png") || message.endsWith(".gif") || message.endsWith(".bmp")) {
+                        if (isImageFile(message)) {
 
-                            //Put the image in file
                             File file = new File(message);
 
-                            //Checks if the image exists
                             if (!file.exists()) {
                                 System.out.println("No File Was Found.");
                             } else {
                                 try {
-
-                                    //Encrypt the image
                                     byte[] imageBytes = java.nio.file.Files.readAllBytes(file.toPath());
-                                    String base64 = java.util.Base64.getEncoder().encodeToString(imageBytes);
-                                    String encrypted = EncryptionUtil.encrypt(base64);
+                                    String encryptedImage = EncryptionUtil.encryptImage(imageBytes);
 
-                                    //Shows user the encrypted image
-                                    output.println("IMG:" + encrypted);
+                                    if (encryptedImage != null) {
+                                        output.println("IMG:" + encryptedImage);
+                                        System.out.println("Image Sent.");
+                                    } else {
+                                        System.out.println("Image Failed To Send.");
+                                    }
 
-                                    //Notify the user the image is sent
-                                    System.out.println("Image Sent.");
                                 } catch (Exception e) {
                                     System.out.println("Image Failed To Send.");
                                 }
                             }
 
                         } else {
-                            // text mssage
                             String encrypted = EncryptionUtil.encrypt(message);
 
-                            // shows encryption happening
-                            System.out.println("Original: " + message);
-                            System.out.println("Encrypted: " + encrypted);
+                            if (encrypted != null) {
+                                System.out.println("Original: " + message);
+                                System.out.println("Encrypted: " + encrypted);
 
-                            output.println("TEXT:" + encrypted);
+                                output.println("TEXT:" + encrypted);
+                            } else {
+                                System.out.println("Message Failed To Send.");
+                            }
                         }
 
                     } catch (Exception e) {
-                        System.out.println("Error sending image.");
+                        System.out.println("Error sending data.");
                     }
                 }
             });
@@ -120,9 +114,19 @@ public class Client {
             sendThread.start();
 
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
+    }
+
+    /*
+     * Checks whether user input appears to be an image file path.
+     */
+    private static boolean isImageFile(String message) {
+        String lower = message.toLowerCase();
+        return lower.endsWith(".jpg") ||
+               lower.endsWith(".jpeg") ||
+               lower.endsWith(".png") ||
+               lower.endsWith(".gif") ||
+               lower.endsWith(".bmp");
     }
 }

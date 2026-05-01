@@ -12,7 +12,8 @@ public class Server {
      * Using synchronizedList to ensure thread-safe access
      * when multiple client threads store messages concurrently.
      */
-    private static List<String> mailbox = Collections.synchronizedList(new ArrayList<>());
+    private static List<String> mailbox =
+            Collections.synchronizedList(new ArrayList<>());
 
     public static void main(String[] args) {
 
@@ -68,12 +69,14 @@ public class Server {
                 /*
                  * Input stream reads messages from the client
                  */
-                BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                BufferedReader input = new BufferedReader(
+                        new InputStreamReader(socket.getInputStream()));
 
                 /*
                  * Output stream sends responses back to client
                  */
-                PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+                PrintWriter output = new PrintWriter(
+                        socket.getOutputStream(), true);
 
                 String message;
 
@@ -99,22 +102,24 @@ public class Server {
                     } else if (message.startsWith("IMG:")) {
 
                         try {
-                            String encrypted = message.substring(4);
+                            String encryptedImage = message.substring(4);
+                            byte[] imageBytes = EncryptionUtil.decryptImage(encryptedImage);
 
-                            String decoded = EncryptionUtil.decrypt(encrypted);
+                            if (imageBytes == null) {
+                                output.println("Error receiving image.");
+                                continue;
+                            }
 
-                            byte[] imageBytes = Base64.getDecoder().decode(decoded);
+                            String fileName = "received_" +
+                                    System.currentTimeMillis() + ".jpg";
 
-                            String fileName = "received_" + System.currentTimeMillis() + ".jpg";
-
-                            FileOutputStream fos = new FileOutputStream(fileName);
-                            fos.write(imageBytes);
-                            fos.close();
+                            try (FileOutputStream fos = new FileOutputStream(fileName)) {
+                                fos.write(imageBytes);
+                            }
 
                             mailbox.add("[IMAGE RECEIVED: " + fileName + "]");
 
                             System.out.println("Image saved as: " + fileName);
-
                             output.println("Image received and stored.");
 
                         } catch (Exception e) {
@@ -127,9 +132,7 @@ public class Server {
                 }
 
             } catch (IOException e) {
-
                 System.out.println("Client disconnected.");
-
             }
         }
     }
