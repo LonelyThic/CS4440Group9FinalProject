@@ -96,6 +96,8 @@ public class Client {
                             if (encrypted != null) {
                                 
                                 System.out.println("");
+
+                                System.out.print("Enter message or image path: ");
                                 
                                 System.out.println("Original: " + message);
                                 System.out.println("Encrypted: " + encrypted);
