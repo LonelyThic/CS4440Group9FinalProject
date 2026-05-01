@@ -46,6 +46,8 @@ public class Client {
                         System.out.println("Server: " + response);
                     }
 
+                    System.out.print("Enter message or image path: ");
+
                 } catch (IOException e) {
                     System.out.println("Server connection closed.");
                 }
@@ -92,12 +94,21 @@ public class Client {
                             String encrypted = EncryptionUtil.encrypt(message);
 
                             if (encrypted != null) {
+                                
+                                System.out.println("");
+
+                                System.out.print("Enter message or image path: ");
+                                
                                 System.out.println("Original: " + message);
                                 System.out.println("Encrypted: " + encrypted);
 
                                 output.println("TEXT:" + encrypted);
                             } else {
                                 System.out.println("Message Failed To Send.");
+
+                                System.out.println("");
+
+                                System.out.print("Enter message or image path: ");
                             }
                         }
 
