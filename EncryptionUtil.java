@@ -11,12 +11,10 @@ public class EncryptionUtil {
     public static String encrypt(String message) {
         try {
             SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "AES");
-
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
             byte[] encrypted = cipher.doFinal(message.getBytes());
-
             return Base64.getEncoder().encodeToString(encrypted);
 
         } catch (Exception e) {
@@ -28,12 +26,10 @@ public class EncryptionUtil {
     public static String decrypt(String encryptedMessage) {
         try {
             SecretKeySpec key = new SecretKeySpec(KEY.getBytes(), "AES");
-
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(Cipher.DECRYPT_MODE, key);
 
             byte[] decoded = Base64.getDecoder().decode(encryptedMessage);
-
             return new String(cipher.doFinal(decoded));
 
         } catch (Exception e) {
